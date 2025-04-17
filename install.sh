@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Récupérer l'utilisateur qui exécute le script
 REAL_USER="$USER"
-
-# Initialisation de la variable OWNER
 OWNER=""
 
-# Récupérer le répertoire de l'utilisateur
+# Get the path & user from env
 if [ -n "$SUDO_USER" ]; then
     echo "shell script execute by with sudo :  user is $SUDO_USER"
     if [ "$SUDO_USER" = "runner" ]; then
@@ -139,35 +136,34 @@ else
   echo "Creating a new update_plr.cfg file with cat EOF..."
   cat > $USER_HOME/printer_data/config/update_plr.cfg << EOF
 # plr-klipper update_manager entry
-[update_manager YUMI_PLR]
+[update_manager KlipperPLR]
 type: git_repo
-path: ~/YUMI_PLR
-origin: https://github.com/Yumi-Lab/YUMI_PLR.git
+path: ~/KlipperPLR
+origin: https://github.com/bigtreetech/KlipperPLR.git
 primary_branch: main
 install_script: install.sh
 is_system_service: False
 
 EOF
 
-# Vérifier si le script est exécuté avec sudo
-echo "Vérification de l'exécution avec sudo..."
-if [ -n "$SUDO_USER" ]; then
-    echo "Le script est exécuté avec sudo."
-    # La variable SUDO_USER est définie, donc le script est exécuté avec sudo
-    REAL_USER="$SUDO_USER"
-    echo "Utilisateur réel (SUDO_USER) : $REAL_USER"
-    
-    echo "Répertoire personnel de l'utilisateur réel (USER_HOME) : $USER_HOME"
-    
-    echo "Exécution de la commande chown pour $USER_HOME/printer_data/config/ avec $OWNER:$OWNER"
-    # Exécuter la commande chown avec les droits de l'utilisateur spécifique (pi:pi pour runner, sinon SUDO_USER)
-    chown -R "$OWNER":"$OWNER" "$USER_HOME/printer_data/config/"
-    echo "Commande chown exécutée."
-else
-    echo "Ce script n'est pas executé en sudo."
-fi
+  echo "Check if the script is executed using sudo..."
+  if [ -n "$SUDO_USER" ]; then
+      echo "The script is executed using sudo."
+      # La variable SUDO_USER est définie, donc le script est exécuté avec sudo
+      REAL_USER="$SUDO_USER"
+      echo "Utilisateur réel (SUDO_USER) : $REAL_USER"
+      
+      echo "Personal path of real users (USER_HOME) : $USER_HOME"
+
+      echo "Execute the chown command of $USER_HOME/printer_data/config/ with $OWNER:$OWNER"
+      chown -R "$OWNER":"$OWNER" "$USER_HOME/printer_data/config/"
+      echo "Execute the chown command."
+  else
+      echo "This script is not executed using sudo."
+  fi
 
   # Print a message to the user
   echo "Installation complete"
+
 fi
 #end of script
