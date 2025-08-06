@@ -124,7 +124,7 @@ fi
 
 #  echo 'M109 S'${EXTRUDER_TEMP} >> ${PLR_PATH}/"${plr}"        # 设置并等待挤出机达到目标温度
 
-cat /tmp/plrtmpA.$$ | sed '/ Z'${1}'/q' | sed -ne '/\(M104\|M140\|M109\|M190\|M106\|M191\)/p' >> ${PLR_PATH}/"${plr}"
+cat /tmp/plrtmpA.$$ | sed '/ Z'${1}'/q' | sed -ne '/\(M104\|M140\|M109\|M190\|M191\)/p' >> ${PLR_PATH}/"${plr}"
 
 echo 'M220 S30' >> ${PLR_PATH}/"${plr}"                        # 降低速度以保证安全续打
 
